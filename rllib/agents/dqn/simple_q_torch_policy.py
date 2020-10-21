@@ -82,13 +82,13 @@ def build_q_losses(policy: Policy, model, dist_class,
 
     # q scores for actions which we know were selected in the given state.
     one_hot_selection = F.one_hot(train_batch[SampleBatch.ACTIONS].long(),
-                                  policy.action_space.n)
+                                  policy.action_space.nvec.max())
     q_t_selected = torch.sum(q_t * one_hot_selection, 1)
 
     # compute estimate of best possible value starting from state at t + 1
     dones = train_batch[SampleBatch.DONES].float()
     q_tp1_best_one_hot_selection = F.one_hot(
-        torch.argmax(q_tp1, 1), policy.action_space.n)
+        torch.argmax(q_tp1, 1), policy.action_space.nvec.max())
     q_tp1_best = torch.sum(q_tp1 * q_tp1_best_one_hot_selection, 1)
     q_tp1_best_masked = (1.0 - dones) * q_tp1_best
 
