@@ -125,8 +125,13 @@ class Unity3DEnv(MultiAgentEnv):
                     0].agent_id_to_index.keys():
                 key = behavior_name + "_{}".format(agent_id)
                 all_agents.append(key)
+
+                # TODO further investigate how we can prevent this
+                # The action should come as a np.array
+                modified_action = np.array([action_dict[key]])
+
                 self.unity_env.set_action_for_agent(behavior_name, agent_id,
-                                                    action_dict[key])
+                                                    modified_action)
         # Do the step.
         self.unity_env.step()
 
@@ -223,6 +228,8 @@ class Unity3DEnv(MultiAgentEnv):
             "VisualHallway": Box(float("-inf"), float("inf"), (84, 84, 3)),
             # Walker.
             "Walker": Box(float("-inf"), float("inf"), (212, )),
+            # GridWorld.
+            "GridWorld": Box(float("-inf"), float("inf"), shape=(84, 84, 3))
         }
         action_spaces = {
             # 3DBall.
@@ -242,6 +249,9 @@ class Unity3DEnv(MultiAgentEnv):
             "VisualHallway": MultiDiscrete([5]),
             # Walker.
             "Walker": Box(float("-inf"), float("inf"), (39, )),
+            # GridWorld.
+            "GridWorld": MultiDiscrete([5]),
+            #"GridWorld": Discrete(5),
         }
 
         # Policies (Unity: "behaviors") and agent-to-policy mapping fns.

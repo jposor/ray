@@ -75,14 +75,14 @@ def build_q_models(policy: Policy, obs_space: gym.spaces.Space,
             Note: The target q model will not be returned, just assigned to
             `policy.target_q_model`.
     """
-    if not isinstance(action_space, gym.spaces.Discrete):
+    if not isinstance(action_space, gym.spaces.MultiDiscrete):
         raise UnsupportedSpaceException(
             "Action space {} is not supported for DQN.".format(action_space))
 
     policy.q_model = ModelCatalog.get_model_v2(
         obs_space=obs_space,
         action_space=action_space,
-        num_outputs=action_space.n,
+        num_outputs=action_space.nvec.max(),
         model_config=config["model"],
         framework=config["framework"],
         name=Q_SCOPE)
@@ -90,7 +90,7 @@ def build_q_models(policy: Policy, obs_space: gym.spaces.Space,
     policy.target_q_model = ModelCatalog.get_model_v2(
         obs_space=obs_space,
         action_space=action_space,
-        num_outputs=action_space.n,
+        num_outputs=action_space.nvec.max(),
         model_config=config["model"],
         framework=config["framework"],
         name=Q_TARGET_SCOPE)
