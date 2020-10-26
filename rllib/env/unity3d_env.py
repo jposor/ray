@@ -229,7 +229,7 @@ class Unity3DEnv(MultiAgentEnv):
             # Walker.
             "Walker": Box(float("-inf"), float("inf"), (212, )),
             # GridWorld.
-            "GridWorld": Box(float("-inf"), float("inf"), shape=(84, 84, 3))
+            "GridWorld": Box(float("-inf"), float("inf"), (84, 84, 1))
         }
         action_spaces = {
             # 3DBall.
